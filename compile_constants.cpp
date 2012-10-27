@@ -10,6 +10,11 @@ template<int a, int b> struct tsub{enum{v = a-b};};
 template<int a, int b> struct tmul{enum{v = a*b};};
 template<int a, int b> struct tquot{enum{v = a/b};};
 template<int a, int b> struct tmod{enum{v = a%b};};
+template<int a, int b> struct teq{enum{v = a == b};};
+template<int a, int b> struct tle{enum{v = a <= b};};
+template<int a, int b> struct tlt{enum{v = a < b};};
+template<int a, int b> struct tge{enum{v = a >= b};};
+template<int a, int b> struct tgt{enum{v = a > b};};
 
 template<template<int> class F, int value> struct tbind{struct t{enum{v = F<value>::v};};};
 template<template<int, int> class F, int value> struct tbind1st{template<int other> struct t{enum{v = F<value, other>::v};};};

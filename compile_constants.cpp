@@ -1,6 +1,24 @@
 #include <stddef.h>
 #include <stdint.h>
 
+template<bool condition, typename A, typename B> struct tif{typedef A t;};
+template<typename A, typename B> struct tif<false, A, B>{typedef B t;};
+
+template<int a> struct tneg{enum{v = -a};};
+template<int a, int b> struct tadd{enum{v = a+b};};
+template<int a, int b> struct tsub{enum{v = a-b};};
+template<int a, int b> struct tmul{enum{v = a*b};};
+template<int a, int b> struct tquot{enum{v = a/b};};
+template<int a, int b> struct tmod{enum{v = a%b};};
+
+template<template<int> class F, int value> struct tbind{struct t{enum{v = F<value>::v};};};
+template<template<int, int> class F, int value> struct tbind1st{template<int other> struct t{enum{v = F<value, other>::v};};};
+template<template<int, int> class F, int value> struct tbind2nd{template<int other> struct t{enum{v = F<other, value>::v};};};
+template<template<int, int> class F> struct tbindcombine{template<int other> struct t{enum{v = F<other, other>::v};};};
+
+template<template<int, int> class Op, int n, template<int> class F> struct taccumulate{enum{v = Op<F<n>::v, taccumulate<Op, n-1, F>::v>::v};};
+template<template<int, int> class Op, template<int> class F> struct taccumulate<Op, 0, F>{enum{v = F<0>::v};};
+
 template<int a, int b> struct tmin{enum{v = a<b?a:b};};
 template<int a, int b> struct tmax{enum{v = a>b?a:b};};
 
@@ -16,6 +34,7 @@ template<int a> struct tpow<a, 0>{enum{v = 1};};
 template<uint32_t a, uint32_t b, uint32_t mod> struct tpowmod{enum{v = (uint32_t)((uint64_t)tpowmod<a,b/2,mod>::v * (uint64_t)tpowmod<a,b-b/2,mod>::v % mod)};};
 template<uint32_t a, uint32_t mod> struct tpowmod<a, 1, mod>{enum{v = a%mod};};
 template<uint32_t a, uint32_t mod> struct tpowmod<a, 0, mod>{enum{v = 1u};};
+
 
 /* countof
  * Usage: countof(some_array) */
@@ -75,5 +94,6 @@ int main()
 	my_assert(tmin<1700,1500>::v == 1500);
 	my_assert(countof("asdf") == 5);
 	my_assert(TReverseByteOrder<uint32_t,15838294u>::v == 1454174464u);
+	my_assert((int)taccumulate<tmul,5,tbind1st<tmax,1>::t>::v == (int)tfactorial<5>::v);
 	return 0;
 }

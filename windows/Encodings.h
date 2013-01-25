@@ -29,6 +29,8 @@ namespace Encodings
     inline std::wstring AnsiToUTF16(const std::string &source) { return MultiToUTF16(source, CP_ACP, 0); }
     inline std::wstring UTF8ToUTF16(const std::string &source) { return MultiToUTF16(source, CP_UTF8, 0); }
     inline std::wstring UTF7ToUTF16(const std::string &source) { return MultiToUTF16(source, CP_UTF7, 0); }
+    inline std::string AnsiToUTF8(const std::string &source) { return UTF16ToUTF8(AnsiToUTF16(source)); }
+    inline std::string UTF8ToAnsi(const std::string &source) { return UTF16ToAnsi(UTF8ToUTF16(source)); }
 }
 
 #endif//NativeUtils_Encodings_h__

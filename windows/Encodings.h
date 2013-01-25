@@ -3,20 +3,24 @@
 #define NativeUtils_Encodings_h__
 
 #include <string>
+#if WINVER < 0x0602
+#include <winnls.h>
+#else
 #include <Stringapiset.h>
+#endif
 
 namespace Encodings
 {
     inline std::wstring MultiToUTF16(const std::string &source, UINT codepage, DWORD flags)
     {
-        std::wstring ret(::MultiByteToWideChar(codepage, flags, source.data(), source.length(), nullptr, 0), wchar_t());
-        ::MultiByteToWideChar(codepage, flags, source.data(), source.length(), &ret[0], ret.length());
+        std::wstring ret(::MultiByteToWideChar(codepage, flags, source.data(), static_cast<int>(source.length()), nullptr, 0), wchar_t());
+        ::MultiByteToWideChar(codepage, flags, source.data(), static_cast<int>(source.length()), &ret[0], static_cast<int>(ret.length()));
         return ret;
     }
     inline std::string UTF16ToMulti(const std::wstring &source, UINT codepage, DWORD flags)
     {
-        std::string ret(::WideCharToMultiByte(codepage, flags, source.data(), source.length(), nullptr, 0, nullptr, nullptr), char());
-        ::WideCharToMultiByte(codepage, flags, source.data(), source.length(), &ret[0], ret.length(), nullptr, nullptr);
+        std::string ret(::WideCharToMultiByte(codepage, flags, source.data(), static_cast<int>(source.length()), nullptr, 0, nullptr, nullptr), char());
+        ::WideCharToMultiByte(codepage, flags, source.data(), static_cast<int>(source.length()), &ret[0], static_cast<int>(ret.length()), nullptr, nullptr);
         return ret;
     }
     inline std::string UTF16ToAnsi(const std::wstring &source) { return UTF16ToMulti(source, CP_ACP, 0); }

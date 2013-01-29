@@ -5,7 +5,7 @@ namespace DebugTools
 {
 #pragma warning(push)
 #pragma warning(disable:4996)
-    void __stdcall DebugString(const char *pFormat, ...)
+    void __cdecl DebugString(const char *pFormat, ...)
     {
         char msg[1024];
         va_list pArg;

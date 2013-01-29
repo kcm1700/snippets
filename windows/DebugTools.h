@@ -9,7 +9,7 @@
 
 namespace DebugTools
 {
-    void __stdcall DebugString(DebugStringConstraint const char *pFormat, ...);
+    void __cdecl DebugString(DebugStringConstraint const char *pFormat, ...);
     void __stdcall SetThreadName( DWORD dwThreadID, char* threadName);
 }
 

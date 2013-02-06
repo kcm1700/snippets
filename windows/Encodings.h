@@ -14,12 +14,14 @@ namespace Encodings
     inline std::wstring MultiToUTF16(const std::string &source, UINT codepage, DWORD flags)
     {
         std::wstring ret(::MultiByteToWideChar(codepage, flags, source.data(), static_cast<int>(source.length()), nullptr, 0), wchar_t());
+		if (ret.empty()) return ret;
         ::MultiByteToWideChar(codepage, flags, source.data(), static_cast<int>(source.length()), &ret[0], static_cast<int>(ret.length()));
         return ret;
     }
     inline std::string UTF16ToMulti(const std::wstring &source, UINT codepage, DWORD flags)
     {
         std::string ret(::WideCharToMultiByte(codepage, flags, source.data(), static_cast<int>(source.length()), nullptr, 0, nullptr, nullptr), char());
+		if (ret.empty()) return ret;
         ::WideCharToMultiByte(codepage, flags, source.data(), static_cast<int>(source.length()), &ret[0], static_cast<int>(ret.length()), nullptr, nullptr);
         return ret;
     }
